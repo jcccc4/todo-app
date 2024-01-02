@@ -1,13 +1,32 @@
 "use client";
 import { useState } from "react";
+import ListHeader from "@/app/ui/listHeader";
+import Button from "./ui/button";
+import prisma from "@/app/lib/prisma";
 export interface Y {
   id: number;
   action: string;
 }
-
-export default function Home() {
+async function getPosts() {
+  const posts = await prisma.post.findMany();
+  where: {
+    published: true;
+  }
+  include: {
+    author: {
+      select: {
+        name: true;
+      }
+    }
+  }
+  return posts;
+}
+export default async function Home() {
   const [task, setTask] = useState("");
   const [taskList, setTaskList] = useState<Array<Y>>([]);
+
+ const posts = await getPosts();
+ console.log(posts);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value;
@@ -24,6 +43,8 @@ export default function Home() {
 
   return (
     <main className="">
+      <ListHeader listName="Task List" />
+
       <input
         type="text"
         className="max-w-sm mx-auto mt-10 mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
