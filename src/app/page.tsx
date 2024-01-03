@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
-import ListHeader from "@/app/ui/listHeader";
-import Button from "./ui/button";
-import prisma from "@/app/lib/prisma";
+import ListHeader from "@/ui/listHeader";
+import Button from "../ui/button";
+import prisma from "@/lib/prisma";
 export interface Y {
   id: number;
   action: string;
@@ -25,9 +25,28 @@ export default async function Home() {
   const [task, setTask] = useState("");
   const [taskList, setTaskList] = useState<Array<Y>>([]);
 
- const posts = await getPosts();
- console.log(posts);
+  const posts = await getPosts();
+  console.log(posts);
+  await prisma.user.create({
+    data: {
+      name: "Alice",
+      email: "alice@prisma.io",
+      posts: {
+        create: { title: "Hello World" },
+      },
+      profile: {
+        create: { bio: "I like turtles" },
+      },
+    },
+  });
 
+  const allUsers = await prisma.user.findMany({
+    include: {
+      posts: true,
+      profile: true,
+    },
+  });
+  console.dir(allUsers, { depth: null });
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value;
     console.log(input);
