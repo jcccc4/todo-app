@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import ListHeader from "@/app/ui/listHeader";
+import TaskList from "./ui/taskList";
 
 export interface Y {
   id: number;
@@ -11,8 +12,6 @@ export default function Home() {
   const [task, setTask] = useState("");
   const [taskList, setTaskList] = useState<Array<Y>>([]);
 
-
-  
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value;
     console.log(input);
@@ -37,12 +36,7 @@ export default function Home() {
         onChange={(e) => handleChange(e)}
         onKeyDown={(e) => handleSubmit(e)}
       />
-
-      <ul className="max-w-sm mx-auto ">
-        {taskList.map((task) => (
-          <li key={task.id}>{task.action}</li>
-        ))}
-      </ul>
+      <TaskList />
     </main>
   );
 }
