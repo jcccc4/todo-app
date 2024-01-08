@@ -11,8 +11,9 @@ function TaskList() {
     fetch("/api/users/1/posts")
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
-        setTaskList(data)});
+        console.log(data);
+        setTaskList(data);
+      });
   }, []);
 
   return (

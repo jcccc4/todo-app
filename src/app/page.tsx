@@ -1,7 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ListHeader from "@/app/ui/listHeader";
 import TaskList from "./ui/taskList";
+import { useRouter } from "next/navigation";
+import { title } from "process";
 
 export interface Y {
   id: number;
@@ -9,19 +11,34 @@ export interface Y {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [task, setTask] = useState("");
-  const [taskList, setTaskList] = useState<Array<Y>>([]);
+  // const [taskList, setTaskList] = useState<Array<Y>>([]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value;
-    console.log(input);
+
     setTask(input);
   };
 
   const handleSubmit = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      setTaskList([...taskList, { id: taskList.length, action: task }]);
+      try {
+        useEffect(() => {
+          fetch("/api/users/1", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ authorId: 1, content: task }),
+          });
+          console.log(task)
+          
+        });
+      } catch (error) {
+        console.log(error)
+      }
     }
   };
 
