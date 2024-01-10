@@ -8,16 +8,3 @@ export async function GET(request: Request) {
   return NextResponse.json(users);
 }
 
-export async function POST(request: Request) {
-  const { content, authorId } = await request.json();
-
-  const newPost = await prisma.post.create({
-    data: {
-      content: content,
-      authorId: authorId,
-    },
-  });
-
-  revalidatePath("/");
-  return NextResponse.json({ newPost }, { status: 200 });
-}
