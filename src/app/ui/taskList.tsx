@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { prisma } from "../lib/prisma";
 
 export interface Y {
   id: number;
   content: string;
 }
-type Props = {
-  taskList: Array<Y>;
-}
-function TaskList({taskList}: Props) {
- 
+async function getData() {
+  const data = await prisma.post.findMany();
 
+  return data;
+}
+async function TaskList() {
+  const datas = await getData();
   return (
     <ul className="max-w-sm mx-auto ">
-      {taskList.map((task) => (
-        <li key={task.id}>{task.content}</li>
+      {datas.map((data) => (
+        <li key={data.id}>{data.content}</li>
       ))}
     </ul>
   );
