@@ -19,3 +19,15 @@ export async function create(formData: FormData) {
 
   revalidatePath("/");
 }
+
+export async function deleteTodo(formData: FormData) {
+  const id = formData.get("inputId") as string;
+  console.log("dfd")
+  await prisma.post.delete({
+    where: {
+      id: Number(id),
+    },
+  });
+
+  revalidatePath("/");
+}
