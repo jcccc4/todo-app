@@ -20,9 +20,25 @@ export async function create(formData: FormData) {
   revalidatePath("/");
 }
 
+export async function editTodo(formData: FormData) {
+  const id = formData.get("editId") as string;
+  const content = formData.get("editValue") as string;
+
+  await prisma.post.update({
+    where: {
+      id: Number(id),
+    },
+    data: {
+      content: content,
+    },
+  });
+
+  revalidatePath("/");
+}
+
 export async function deleteTodo(formData: FormData) {
   const id = formData.get("inputId") as string;
-  console.log("dfd")
+
   await prisma.post.delete({
     where: {
       id: Number(id),
