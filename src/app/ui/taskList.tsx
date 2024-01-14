@@ -7,7 +7,11 @@ export interface Y {
   content: string;
 }
 async function getData() {
-  const data = await prisma.post.findMany();
+  const data = await prisma.post.findMany({
+    orderBy: {
+      id: "asc",
+    },
+  });
 
   return data;
 }
@@ -22,9 +26,8 @@ async function TaskList() {
         >
           <form action={editTodo} className="w-6 h-6">
             <input type="hidden" name="editId" value={data.id} />
-            <input name="editValue" value={data.content || ""} />
+            <input name="editValue" value={data.content || ""} className="focus:outline-none "/>
           </form>
-
 
           <form action={deleteTodo} className="w-6 h-6">
             <input type="hidden" name="inputId" value={data.id} />
