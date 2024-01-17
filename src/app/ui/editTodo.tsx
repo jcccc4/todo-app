@@ -1,6 +1,7 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { editTodo } from "../actions/todoActions";
+import { useDebounce } from "../hooks/useDebounce";
 
 type Props = {
   data: { id: number; content: string | null; authorId: number | null };
@@ -8,17 +9,26 @@ type Props = {
 
 function EditTodo({ data }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
-
-  const handleChange = () => {
-    formRef.current?.submit();
+  const [value, setValue] = useState(data.content || "");
+  const [initialRender, setInitialRender] = useState(true);
+  const debouncedValue = useDebounce(value);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
   };
+
+  useEffect(() => {
+    if (!initialRender) {
+      formRef.current?.requestSubmit();
+    }
+    setInitialRender(false);
+  }, [debouncedValue]);
 
   return (
     <form action={editTodo} ref={formRef} className="w-6 h-6">
       <input type="hidden" name="editId" value={data.id} />
       <input
         name="editValue"
-        value={data.content || ""}
+        defaultValue={value}
         className="focus:outline-none "
         onChange={handleChange}
       />

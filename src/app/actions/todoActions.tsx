@@ -32,8 +32,6 @@ export async function editTodo(formData: FormData) {
       content: content,
     },
   });
-
-  revalidatePath("/");
 }
 
 export async function deleteTodo(formData: FormData) {
