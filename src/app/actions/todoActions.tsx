@@ -32,6 +32,8 @@ export async function editTodo(formData: FormData) {
       content: content,
     },
   });
+  console.log(content)
+  
 }
 
 export async function deleteTodo(formData: FormData) {

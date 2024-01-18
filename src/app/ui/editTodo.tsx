@@ -10,17 +10,14 @@ type Props = {
 function EditTodo({ data }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const [value, setValue] = useState(data.content || "");
-  const [initialRender, setInitialRender] = useState(true);
   const debouncedValue = useDebounce(value);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   };
 
   useEffect(() => {
-    if (!initialRender) {
-      formRef.current?.requestSubmit();
-    }
-    setInitialRender(false);
+    formRef.current?.requestSubmit();
   }, [debouncedValue]);
 
   return (
