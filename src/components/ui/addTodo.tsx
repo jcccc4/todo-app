@@ -1,4 +1,4 @@
-import { create } from "@/app/actions/todoActions";
+import { create } from "@/components/actions/todoActions";
 
 function AddTodo() {
   return (

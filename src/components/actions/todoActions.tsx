@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/components/lib/prisma";
 
 export async function create(formData: FormData) {
   const input = formData.get("input") as string;
@@ -32,7 +32,7 @@ export async function editTodo(formData: FormData) {
       content: content,
     },
   });
-  console.log(content)
+
   
 }
 

@@ -1,7 +1,7 @@
 
-import ListHeader from "@/app/ui/listHeader";
-import TaskList from "./ui/taskList";
-import AddTodo from "@/app/ui/addTodo";
+import ListHeader from "@/components/ui/listHeader";
+import TaskList from "../components/ui/taskList";
+import AddTodo from "@/components/ui/addTodo";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
