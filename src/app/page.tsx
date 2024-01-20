@@ -1,3 +1,4 @@
+import { SessionProvider } from "next-auth/react";
 
 import ListHeader from "@/components/ui/listHeader";
 import TaskList from "../components/ui/taskList";
@@ -19,10 +20,12 @@ async function getData() {
 export default async function Home() {
   const datas = await getData();
   return (
-    <main className="">
-      <ListHeader listName="Task List" />
-      <AddTodo />
-      <TaskList data={datas}/>
-    </main>
+    <SessionProvider session={session}>
+      <main className="">
+        <ListHeader listName="Task List" />
+        <AddTodo />
+        <TaskList data={datas} />
+      </main>
+    </SessionProvider>
   );
 }
