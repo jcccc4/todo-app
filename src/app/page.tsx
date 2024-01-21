@@ -1,10 +1,8 @@
-import { SessionProvider } from "next-auth/react";
-
 import ListHeader from "@/components/ui/listHeader";
 import TaskList from "../components/ui/taskList";
-import AddTodo from "@/components/ui/addTodo";
+import AddTodo from "@/components/ui/actions/addTodo";
 import { PrismaClient } from "@prisma/client";
-
+import { getServerSession } from "next-auth";
 const prisma = new PrismaClient();
 
 async function getData() {
@@ -19,13 +17,13 @@ async function getData() {
 
 export default async function Home() {
   const datas = await getData();
-  return (
-    <SessionProvider session={session}>
-      <main className="">
-        <ListHeader listName="Task List" />
+  const session = await getServerSession();
+  if (session) {
+    return (
+      <main>
         <AddTodo />
         <TaskList data={datas} />
       </main>
-    </SessionProvider>
-  );
+    );
+  }
 }

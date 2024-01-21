@@ -1,6 +1,6 @@
 import { IconX } from "@tabler/icons-react";
 import React from "react";
-import { deleteTodo } from "../actions/todoActions";
+import { deleteTodo } from "./todoActions";
 
 type Props = {
   data: { id: number; content: string | null; authorId: number | null };

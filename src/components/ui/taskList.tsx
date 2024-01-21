@@ -1,6 +1,6 @@
 
-import EditTodo from "./editTodo";
-import DeleteTodo from "./deleteTodo";
+import EditTodo from "./actions/editTodo";
+import DeleteTodo from "./actions/deleteTodo";
 
 type Props = {
   data: { id: number; content: string | null; authorId: number | null }[];

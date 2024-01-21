@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { editTodo } from "../actions/todoActions";
-import { useDebounce } from "../hooks/useDebounce";
+import { editTodo } from "./todoActions";
+import { useDebounce } from "../../hooks/useDebounce";
 
 type Props = {
   data: { id: number; content: string | null; authorId: number | null };
