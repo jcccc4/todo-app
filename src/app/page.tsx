@@ -19,11 +19,6 @@ export default async function Home() {
   const datas = await getData();
   const session = await getServerSession();
   if (session) {
-    return (
-      <main>
-        <AddTodo />
-        <TaskList data={datas} />
-      </main>
-    );
+    return <TaskList data={datas} />;
   }
 }
