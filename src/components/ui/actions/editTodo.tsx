@@ -5,9 +5,10 @@ import { useDebounce } from "../../hooks/useDebounce";
 
 type Props = {
   data: { id: number; content: string | null; authorId: number | null };
+  formEditAction: (formData: FormData) => void;
 };
 
-function EditTodo({ data }: Props) {
+function EditTodo({ data, formEditAction }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const [value, setValue] = useState(data.content || "");
   const debouncedValue = useDebounce(value);
@@ -21,7 +22,7 @@ function EditTodo({ data }: Props) {
   }, [debouncedValue]);
 
   return (
-    <form action={editTodo} ref={formRef} className="w-6 h-6">
+    <form action={formEditAction} ref={formRef} className="w-6 h-6">
       <input type="hidden" name="editId" value={data.id} />
       <input
         name="editValue"
