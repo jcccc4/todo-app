@@ -4,7 +4,7 @@ import SessionProvider from "@/components/ui/sessionProvider";
 import "./globals.css";
 import { getServerSession } from "next-auth";
 import ListHeader from "@/components/ui/listHeader";
-
+import Providers from "@/components/providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -23,8 +23,10 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <SessionProvider session={session}>
-          <ListHeader listName="Task List" />
-          {children}
+          <Providers>
+            <ListHeader listName="Task List" />
+            {children}
+          </Providers>
         </SessionProvider>
       </body>
     </html>

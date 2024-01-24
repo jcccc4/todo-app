@@ -1,16 +1,15 @@
 import TaskList from "../components/ui/taskList";
-import { PrismaClient } from "@prisma/client";
+
 import { getServerSession } from "next-auth";
 import {
-  useQuery,
-  useMutation,
-  useQueryClient,
+  HydrationBoundary,
   QueryClient,
   QueryClientProvider,
+  dehydrate,
+  useQuery,
 } from "@tanstack/react-query";
+import { prisma } from "@/components/lib/prisma";
 
-const prisma = new PrismaClient();
-const queryClient = new QueryClient();
 async function getData() {
   const data = await prisma.post.findMany({
     orderBy: {
@@ -22,15 +21,15 @@ async function getData() {
 }
 
 export default async function Home() {
-  const datas = await getData();
   const session = await getServerSession();
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient()
+
+  await queryClient.prefetchQuery({
+    queryKey: ['posts'],
+    queryFn: getData,
+  })
   
   if (session) {
-    return (
-      <QueryClientProvider client={queryClient}>
-        <TaskList data={datas} />
-      </QueryClientProvider>
-    );
+    return <HydrationBoundary state={dehydrate(queryClient)}><TaskList /></HydrationBoundary>;
   }
 }

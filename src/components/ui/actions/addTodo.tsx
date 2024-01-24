@@ -1,11 +1,19 @@
 "use client";
-import { create, deleteTodo, editTodo } from "@/components/ui/actions/todoActions";
+import {
+  create,
+  deleteTodo,
+  editTodo,
+} from "@/components/ui/actions/todoActions";
 import { useOptimistic, useRef } from "react";
 import EditTodo from "./editTodo";
 import DeleteTodo from "./deleteTodo";
+import { useQuery } from "@tanstack/react-query";
+import { prisma } from "@/components/lib/prisma";
 
 type Props = {
-  data: { id: number; content: string | null; authorId: number | null }[];
+  data:
+    | { id: number; content: string | null; authorId: number | null }[]
+    | undefined;
 };
 
 type dataProps = {
@@ -21,76 +29,23 @@ type dataPropsWithAction = {
   action: string | null;
 };
 
-function AddTodo({ data }: Props) {
+ function AddTodo() {
+  
+  async function getData() {
+    const data = await prisma.post.findMany({
+      orderBy: {
+        id: "asc",
+      },
+    });
+
+    return data;
+  }
   const formRef = useRef<HTMLFormElement>(null);
-  const [optimisticState, addOptimistic] = useOptimistic(
-    data,
-    (state, test: dataPropsWithAction) => {
-      if (test.action === "add") {
-        return [
-          ...state,
-          {
-            id: test.id,
-            content: test.content as string,
-            authorId: test.authorId,
-          },
-        ];
-      } else if (test.action === "edit") {
-        return state.map((item) => {
-          if (item.id === test.id) {
-            return {
-              ...item,
-              content: test.content as string,
-            };
-          }
-          return item;
-        });
-      } else if(test.action === "delete"){
-        return state.filter((item) => item.id !== test.id)
-      }
-      return state;
-    } 
-  );
-
-  async function formAction(formData: FormData) {
-    addOptimistic({
-      id: 1,
-      content: formData.get("input") as string,
-      authorId: null,
-      action: "add",
-    });
-    formRef.current?.reset();
-    await create(formData);
-  }
-  async function formEditAction(formData: FormData) {
-    const id = formData.get("editId") as string;
-    const content = formData.get("editValue") as string;
-    addOptimistic({
-      id: Number(id),
-      content: content as string,
-      authorId: null,
-      action: "edit",
-    });
-    formRef.current?.reset();
-    await editTodo(formData);
-  }
-
-  async function formDeleteAction(formData: FormData) {
-    const id = formData.get("inputId") as string;
-
-    addOptimistic({
-      id: Number(id),
-      content: "",
-      authorId: null,
-      action: "delete",
-    });
-    formRef.current?.reset();
-    await deleteTodo(formData);
-  }
-
+  const { data } = useQuery({ queryKey: ["posts"], queryFn: getData });
+  console.log(data);
   return (
     <main>
-      <form action={formAction} className="w-1/2 m-auto" ref={formRef}>
+      <form action={create} className="w-1/2 m-auto" ref={formRef}>
         <input
           name="input"
           type="text"
@@ -99,13 +54,13 @@ function AddTodo({ data }: Props) {
         />
       </form>
       <ul className="max-w-sm mx-auto flex flex-col gap-4">
-        {optimisticState.map((data: dataProps) => (
+        {data?.map((data: dataProps) => (
           <li
             key={data.id}
             className="w-full h-10 px-4 flex items-center justify-between border border-sky-500"
-          >
-            <EditTodo data={data} formEditAction={formEditAction} />
-            <DeleteTodo data={data} formDeleteAction={formDeleteAction}/>
+          >{data.content}
+            {/* <EditTodo data={data} formEditAction={formEditAction} />
+            <DeleteTodo data={data} formDeleteAction={formDeleteAction} /> */}
           </li>
         ))}
       </ul>

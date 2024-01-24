@@ -1,15 +1,15 @@
-
 import AddTodo from "./actions/addTodo";
 
 type Props = {
-  data: { id: number; content: string | null; authorId: number | null }[];
+  data:
+    | { id: number; content: string | null; authorId: number | null }[]
+    | undefined;
 };
 
-function TaskList({data}: Props) {
+function TaskList() {
   return (
     <div>
-      <AddTodo data={data} />
-     
+      <AddTodo />
     </div>
   );
 }
