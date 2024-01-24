@@ -1,10 +1,16 @@
-import ListHeader from "@/components/ui/listHeader";
 import TaskList from "../components/ui/taskList";
-import AddTodo from "@/components/ui/actions/addTodo";
 import { PrismaClient } from "@prisma/client";
 import { getServerSession } from "next-auth";
-const prisma = new PrismaClient();
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 
+const prisma = new PrismaClient();
+const queryClient = new QueryClient();
 async function getData() {
   const data = await prisma.post.findMany({
     orderBy: {
@@ -18,7 +24,13 @@ async function getData() {
 export default async function Home() {
   const datas = await getData();
   const session = await getServerSession();
+  const queryClient = new QueryClient();
+  
   if (session) {
-    return <TaskList data={datas} />;
+    return (
+      <QueryClientProvider client={queryClient}>
+        <TaskList data={datas} />
+      </QueryClientProvider>
+    );
   }
 }
