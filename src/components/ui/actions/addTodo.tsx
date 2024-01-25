@@ -45,34 +45,39 @@ function AddTodo() {
 
   const addTodoMutation = useMutation({
     mutationFn: create,
-    // When mutate is called:
     onMutate: async (newTodo) => {
-      // Cancel any outgoing refetches
-      // (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries({ queryKey: ["posts"] });
-
-      // Snapshot the previous value
       const previousTodos = queryClient.getQueryData(["posts"]);
-
-      // Optimistically update to the new value
       queryClient.setQueryData(["posts"], (old: dataProps[]) => [
         ...old,
         { authorId: 1, content: newTodo.get("input") as string },
       ]);
 
-      // Return a context object with the snapshotted value
       return { previousTodos };
     },
-    // If the mutation fails,
-    // use the context returned from onMutate to roll back
     onError: (err, newTodo, context) => {
       queryClient.setQueryData(["posts"], context?.previousTodos);
     },
-    // Always refetch after error or success:
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
+  const closeTodoMutation = useMutation({
+    mutationFn: deleteTodo,
+    onMutate: async (newTodo) => {
+      await queryClient.cancelQueries({ queryKey: ["posts"] });
+      const id = newTodo.get("inputId") as string;
+
+      queryClient.setQueryData(["posts"], (old: dataProps[]) =>
+        old.filter((item: dataProps) => item.id !== Number(id))
+      );
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
+
   return (
     <main>
       <form
@@ -94,8 +99,8 @@ function AddTodo() {
             className="w-full h-10 px-4 flex items-center justify-between border border-sky-500"
           >
             {data.content}
-            {/* <EditTodo data={data} formEditAction={formEditAction} />
-            <DeleteTodo data={data} formDeleteAction={formDeleteAction} /> */}
+            {/* <EditTodo data={data} formEditAction={formEditAction} />}*/}
+            <DeleteTodo data={data} closeTodoMutation={closeTodoMutation} />
           </li>
         ))}
       </ul>
