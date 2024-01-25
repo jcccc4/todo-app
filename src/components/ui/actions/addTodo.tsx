@@ -7,7 +7,7 @@ import {
 import { useOptimistic, useRef } from "react";
 import EditTodo from "./editTodo";
 import DeleteTodo from "./deleteTodo";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { prisma } from "@/components/lib/prisma";
 
 type Props = {
@@ -29,8 +29,8 @@ type dataPropsWithAction = {
   action: string | null;
 };
 
- function AddTodo() {
-  
+function AddTodo() {
+  const queryClient = useQueryClient();
   async function getData() {
     const data = await prisma.post.findMany({
       orderBy: {
@@ -42,10 +42,44 @@ type dataPropsWithAction = {
   }
   const formRef = useRef<HTMLFormElement>(null);
   const { data } = useQuery({ queryKey: ["posts"], queryFn: getData });
-  console.log(data);
+
+  const addTodoMutation = useMutation({
+    mutationFn: create,
+    // When mutate is called:
+    onMutate: async (newTodo) => {
+      // Cancel any outgoing refetches
+      // (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({ queryKey: ["posts"] });
+
+      // Snapshot the previous value
+      const previousTodos = queryClient.getQueryData(["posts"]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(["posts"], (old: dataProps[]) => [
+        ...old,
+        { authorId: 1, content: newTodo.get("input") as string },
+      ]);
+
+      // Return a context object with the snapshotted value
+      return { previousTodos };
+    },
+    // If the mutation fails,
+    // use the context returned from onMutate to roll back
+    onError: (err, newTodo, context) => {
+      queryClient.setQueryData(["posts"], context?.previousTodos);
+    },
+    // Always refetch after error or success:
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
   return (
     <main>
-      <form action={create} className="w-1/2 m-auto" ref={formRef}>
+      <form
+        action={(formData) => addTodoMutation.mutate(formData)}
+        className="w-1/2 m-auto"
+        ref={formRef}
+      >
         <input
           name="input"
           type="text"
@@ -58,7 +92,8 @@ type dataPropsWithAction = {
           <li
             key={data.id}
             className="w-full h-10 px-4 flex items-center justify-between border border-sky-500"
-          >{data.content}
+          >
+            {data.content}
             {/* <EditTodo data={data} formEditAction={formEditAction} />
             <DeleteTodo data={data} formDeleteAction={formDeleteAction} /> */}
           </li>

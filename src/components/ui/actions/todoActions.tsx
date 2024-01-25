@@ -16,7 +16,6 @@ export async function create(formData: FormData) {
       content: input,
     },
   });
-
   revalidatePath("/");
 }
 
@@ -32,7 +31,7 @@ export async function editTodo(formData: FormData) {
       content: content,
     },
   });
-  revalidatePath("/");
+ 
 }
 
 export async function deleteTodo(formData: FormData) {
