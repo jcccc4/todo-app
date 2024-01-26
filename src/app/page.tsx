@@ -4,9 +4,7 @@ import { getServerSession } from "next-auth";
 import {
   HydrationBoundary,
   QueryClient,
-  QueryClientProvider,
   dehydrate,
-  useQuery,
 } from "@tanstack/react-query";
 import { prisma } from "@/components/lib/prisma";
 
@@ -22,14 +20,18 @@ async function getData() {
 
 export default async function Home() {
   const session = await getServerSession();
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ['posts'],
+    queryKey: ["posts"],
     queryFn: getData,
-  })
-  
+  });
+
   if (session) {
-    return <HydrationBoundary state={dehydrate(queryClient)}><TaskList /></HydrationBoundary>;
+    return (
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <TaskList />
+      </HydrationBoundary>
+    );
   }
 }
