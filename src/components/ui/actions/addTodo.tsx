@@ -4,29 +4,16 @@ import {
   deleteTodo,
   editTodo,
 } from "@/components/ui/actions/todoActions";
-import { useOptimistic, useRef } from "react";
+import { useRef } from "react";
 import EditTodo from "./editTodo";
 import DeleteTodo from "./deleteTodo";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { prisma } from "@/components/lib/prisma";
 
-type Props = {
-  data:
-    | { id: number; content: string | null; authorId: number | null }[]
-    | undefined;
-};
-
 type dataProps = {
   id: number;
   content: string | null;
   authorId: number | null;
-};
-
-type dataPropsWithAction = {
-  id: number;
-  content: string | null;
-  authorId: number | null;
-  action: string | null;
 };
 
 function AddTodo() {
@@ -66,10 +53,34 @@ function AddTodo() {
     mutationFn: deleteTodo,
     onMutate: async (newTodo) => {
       await queryClient.cancelQueries({ queryKey: ["posts"] });
-      const id = newTodo.get("inputId") as string;
+   
+      const index = newTodo.get("index") as string;
+      console.log(index);
+      queryClient.setQueryData(["posts"], (old: dataProps[]) =>
+        old.filter((item: dataProps, dataIndex) => dataIndex !== Number(index))
+      );
+     
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
+
+  const editTodoMutation = useMutation({
+    mutationFn: editTodo,
+    onMutate: async (newTodo) => {
+      // await queryClient.cancelQueries({ queryKey: ["posts"] });
+      const id = newTodo.get("editId") as string;
 
       queryClient.setQueryData(["posts"], (old: dataProps[]) =>
-        old.filter((item: dataProps) => item.id !== Number(id))
+        old.map((item: dataProps) => {
+          if (item.id !== Number(id)) {
+            item.content = newTodo.get("editContent") as string;
+            return item;
+          }
+          return item;
+        })
       );
     },
 
@@ -93,14 +104,17 @@ function AddTodo() {
         />
       </form>
       <ul className="max-w-sm mx-auto flex flex-col gap-4">
-        {data?.map((data: dataProps) => (
+        {data?.map((data: dataProps, index: number) => (
           <li
             key={data.id}
             className="w-full h-10 px-4 flex items-center justify-between border border-sky-500"
           >
-            {data.content}
-            {/* <EditTodo data={data} formEditAction={formEditAction} />}*/}
-            <DeleteTodo data={data} closeTodoMutation={closeTodoMutation} />
+            <EditTodo data={data} editTodoMutation={editTodoMutation} />
+            <DeleteTodo
+              data={data}
+              closeTodoMutation={closeTodoMutation}
+              index={index}
+            />
           </li>
         ))}
       </ul>

@@ -2,13 +2,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { editTodo } from "./todoActions";
 import { useDebounce } from "../../hooks/useDebounce";
+import { UseMutationResult } from "@tanstack/react-query";
 
 type Props = {
   data: { id: number; content: string | null; authorId: number | null };
-  formEditAction: (formData: FormData) => void;
+  editTodoMutation: UseMutationResult<void, Error, FormData, void>;
 };
 
-function EditTodo({ data, formEditAction }: Props) {
+function EditTodo({ data }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const [value, setValue] = useState(data.content || "");
   const debouncedValue = useDebounce(value);
@@ -22,7 +23,11 @@ function EditTodo({ data, formEditAction }: Props) {
   }, [debouncedValue]);
 
   return (
-    <form action={formEditAction} ref={formRef} className="w-6 h-6">
+    <form
+      action={editTodo}
+      ref={formRef}
+      className="w-6 h-6"
+    >
       <input type="hidden" name="editId" value={data.id} />
       <input
         name="editValue"
