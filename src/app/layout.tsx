@@ -4,7 +4,7 @@ import SessionProvider from "@/components/ui/sessionProvider";
 import "./globals.css";
 import { getServerSession } from "next-auth";
 import ListHeader from "@/components/ui/listHeader";
-import Providers from "@/components/providers";
+import Providers from "@/components/lib/providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

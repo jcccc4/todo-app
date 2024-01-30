@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { editTodo } from "./todoActions";
-import { useDebounce } from "../../hooks/useDebounce";
+import { useDebounce } from "@/hooks/useDebounce";
 import { UseMutationResult } from "@tanstack/react-query";
 
 type Props = {
