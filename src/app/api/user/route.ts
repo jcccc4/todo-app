@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/components/lib/prisma";
+import prisma from "@/components/lib/prisma";
 import { hash } from "bcrypt";
 export async function POST(req: Request) {
   try {
@@ -39,7 +39,6 @@ export async function POST(req: Request) {
     });
 
     const { password: newUserPassword, ...rest } = newUser;
-
 
     return NextResponse.json(
       { user: rest, message: "User created successfully" },
