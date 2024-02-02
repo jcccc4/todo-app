@@ -11,6 +11,7 @@ type Props = {
 
 function EditTodo({ data }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
+  const [firstRender, setFirstRender] = useState(true);
   const [value, setValue] = useState(data.content || "");
   const debouncedValue = useDebounce(value);
 
@@ -19,15 +20,17 @@ function EditTodo({ data }: Props) {
   };
 
   useEffect(() => {
-    formRef.current?.requestSubmit();
+    if (!firstRender) {
+      formRef.current?.requestSubmit();
+    }
   }, [debouncedValue]);
+  
+  useEffect(() => {
+    setFirstRender(false);
+  }, []);
 
   return (
-    <form
-      action={editTodo}
-      ref={formRef}
-      className="w-6 h-6"
-    >
+    <form action={editTodo} ref={formRef} className="w-6 h-6">
       <input type="hidden" name="editId" value={data.id} />
       <input
         name="editValue"

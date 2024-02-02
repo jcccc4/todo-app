@@ -6,7 +6,7 @@ import {
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query";
-import { prisma } from "@/components/lib/prisma";
+import prisma from "@/components/lib/prisma";
 
 async function getData() {
   const data = await prisma.post.findMany({

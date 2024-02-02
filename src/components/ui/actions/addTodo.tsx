@@ -8,7 +8,7 @@ import { useRef } from "react";
 import EditTodo from "./editTodo";
 import DeleteTodo from "./deleteTodo";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { prisma } from "@/components/lib/prisma";
+import prisma from "@/components/lib/prisma";
 
 type dataProps = {
   id: number;
@@ -53,13 +53,12 @@ function AddTodo() {
     mutationFn: deleteTodo,
     onMutate: async (newTodo) => {
       await queryClient.cancelQueries({ queryKey: ["posts"] });
-   
+
       const index = newTodo.get("index") as string;
       console.log(index);
       queryClient.setQueryData(["posts"], (old: dataProps[]) =>
         old.filter((item: dataProps, dataIndex) => dataIndex !== Number(index))
       );
-     
     },
 
     onSettled: () => {
@@ -70,7 +69,7 @@ function AddTodo() {
   const editTodoMutation = useMutation({
     mutationFn: editTodo,
     onMutate: async (newTodo) => {
-      // await queryClient.cancelQueries({ queryKey: ["posts"] });
+      await queryClient.cancelQueries({ queryKey: ["posts"] });
       const id = newTodo.get("editId") as string;
 
       queryClient.setQueryData(["posts"], (old: dataProps[]) =>
