@@ -3,12 +3,12 @@ import {
   create,
   deleteTodo,
   editTodo,
-} from "@/components/ui/actions/todoActions";
+} from "@/components/actions/todoActions";
 import { useRef } from "react";
 import EditTodo from "./editTodo";
 import DeleteTodo from "./deleteTodo";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import prisma from "@/components/lib/prisma";
+import prisma from "@/lib/prisma";
 
 type dataProps = {
   id: number;

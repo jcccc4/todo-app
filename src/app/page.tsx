@@ -1,4 +1,4 @@
-import TaskList from "../components/ui/taskList";
+import TaskList from "../components/taskList";
 
 import { getServerSession } from "next-auth";
 import {
@@ -6,7 +6,7 @@ import {
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query";
-import prisma from "@/components/lib/prisma";
+import prisma from "@/lib/prisma";
 
 async function getData() {
   const data = await prisma.post.findMany({

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import prisma from "@/components/lib/prisma";
+import prisma from "@/lib/prisma";
 import { hash } from "bcrypt";
-import { signUpSchema } from "@/components/lib/types";
+import { signUpSchema } from "@/lib/types";
 export async function POST(req: Request) {
   try {
     const body = await req.json();

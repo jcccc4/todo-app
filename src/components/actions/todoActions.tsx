@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import prisma from "@/components/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export async function create(formData: FormData) {
   const input = formData.get("input") as string;

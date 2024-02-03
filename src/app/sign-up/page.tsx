@@ -1,5 +1,5 @@
 "use client";
-import { signUpSchema, TSignUpSchema } from "@/components/lib/types";
+import { signUpSchema, TSignUpSchema } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import React from "react";
