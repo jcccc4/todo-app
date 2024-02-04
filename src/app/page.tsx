@@ -7,6 +7,7 @@ import {
   dehydrate,
 } from "@tanstack/react-query";
 import prisma from "@/lib/prisma";
+import AddTodo from "@/components/actions/addTodo";
 
 async function getData() {
   const data = await prisma.post.findMany({
@@ -30,7 +31,7 @@ export default async function Home() {
   if (session) {
     return (
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <TaskList />
+        <AddTodo />
       </HydrationBoundary>
     );
   }
