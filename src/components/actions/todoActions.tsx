@@ -2,9 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
+import { getServerSession } from "next-auth";
 
 export async function create(formData: FormData) {
   const input = formData.get("input") as string;
+  const session = await getServerSession();
+  const userEmail = session?.user?.email;
+
+  console.log("userEmail", userEmail);
 
   if (!input.trim()) {
     return;
@@ -12,7 +17,7 @@ export async function create(formData: FormData) {
 
   await prisma.post.create({
     data: {
-      authorId: 1,
+      email: userEmail,
       content: input,
     },
   });
@@ -43,4 +48,19 @@ export async function deleteTodo(formData: FormData) {
   });
 
   revalidatePath("/");
+}
+
+export async function getData() {
+  const session = await getServerSession();
+  const userEmail = session?.user?.email;
+  const data = await prisma.post.findMany({
+    where: {
+      email: userEmail,
+    },
+    orderBy: {
+      id: "asc",
+    },
+  });
+
+  return data;
 }

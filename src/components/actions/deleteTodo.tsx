@@ -1,19 +1,46 @@
 import { IconX } from "@tabler/icons-react";
-import { UseMutationResult } from "@tanstack/react-query";
+import {
+  UseMutationResult,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import React from "react";
+import { deleteTodo } from "./todoActions";
 
 type Props = {
   data: { id: number; content: string | null; authorId: number | null };
-  closeTodoMutation: UseMutationResult<void, Error, FormData>;
   index: number;
 };
 
-function DeleteTodo({ data, closeTodoMutation, index }: Props) {
+type dataProps = {
+  id: number;
+  content: string | null;
+  authorId: number | null;
+};
+
+function DeleteTodo({ data, index }: Props) {
+  const queryClient = useQueryClient();
+  const deleteTodoMutation = useMutation({
+    mutationFn: deleteTodo,
+    onMutate: async (newTodo) => {
+      await queryClient.cancelQueries({ queryKey: ["posts"] });
+
+      const index = newTodo.get("index") as string;
+      console.log(index);
+      queryClient.setQueryData(["posts"], (old: dataProps[]) =>
+        old.filter((item: dataProps, dataIndex) => dataIndex !== Number(index))
+      );
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
   return (
     <form
       action={(formData) => {
         formData.set("index", index.toString());
-        closeTodoMutation.mutate(formData);
+        deleteTodoMutation.mutate(formData);
       }}
       className="w-6 h-6"
     >

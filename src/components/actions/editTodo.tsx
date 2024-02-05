@@ -2,11 +2,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { editTodo } from "./todoActions";
 import { useDebounce } from "@/hooks/useDebounce";
-import { UseMutationResult } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   data: { id: number; content: string | null; authorId: number | null };
-  editTodoMutation: UseMutationResult<void, Error, FormData, void>;
+};
+type dataProps = {
+  id: number;
+  content: string | null;
+  authorId: number | null;
 };
 
 function EditTodo({ data }: Props) {
@@ -14,6 +18,30 @@ function EditTodo({ data }: Props) {
   const [firstRender, setFirstRender] = useState(true);
   const [value, setValue] = useState(data.content || "");
   const debouncedValue = useDebounce(value);
+
+  const queryClient = useQueryClient();
+
+  const editTodoMutation = useMutation({
+    mutationFn: editTodo,
+    onMutate: async (newTodo) => {
+      await queryClient.cancelQueries({ queryKey: ["posts"] });
+      const id = newTodo.get("editId") as string;
+
+      queryClient.setQueryData(["posts"], (old: dataProps[]) =>
+        old.map((item: dataProps) => {
+          if (item.id !== Number(id)) {
+            item.content = newTodo.get("editContent") as string;
+            return item;
+          }
+          return item;
+        })
+      );
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+    },
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
@@ -24,13 +52,17 @@ function EditTodo({ data }: Props) {
       formRef.current?.requestSubmit();
     }
   }, [debouncedValue]);
-  
+
   useEffect(() => {
     setFirstRender(false);
   }, []);
 
   return (
-    <form action={editTodo} ref={formRef} className="w-6 h-6">
+    <form
+      action={(formData) => editTodoMutation.mutate(formData)}
+      ref={formRef}
+      className="w-6 h-6"
+    >
       <input type="hidden" name="editId" value={data.id} />
       <input
         name="editValue"

@@ -1,22 +1,13 @@
-
 import { getServerSession } from "next-auth";
 import {
   HydrationBoundary,
   QueryClient,
   dehydrate,
 } from "@tanstack/react-query";
-import prisma from "@/lib/prisma";
+
 import AddTodo from "@/components/actions/addTodo";
-
-async function getData() {
-  const data = await prisma.post.findMany({
-    orderBy: {
-      id: "asc",
-    },
-  });
-
-  return data;
-}
+import TodoList from "@/components/actions/todoList";
+import { getData } from "@/components/actions/todoActions";
 
 export default async function Home() {
   const session = await getServerSession();
@@ -31,6 +22,7 @@ export default async function Home() {
     return (
       <HydrationBoundary state={dehydrate(queryClient)}>
         <AddTodo />
+        <TodoList />
       </HydrationBoundary>
     );
   }
