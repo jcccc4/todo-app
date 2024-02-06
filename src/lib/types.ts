@@ -12,4 +12,9 @@ export const signUpSchema = z
     path: ["confirmPassword"],
   });
 
+export const loginSchema = z.object({
+  username: z.string().min(3),
+  password: z.string().min(10, "Password must be at least 10 characters"),
+});
+
 export type TSignUpSchema = z.infer<typeof signUpSchema>;
