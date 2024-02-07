@@ -1,14 +1,13 @@
 "use client";
 
-import { TSignUpSchema, signUpSchema } from "@/lib/types";
+import { TLoginSchema, loginSchema } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
 
-type Props = {};
-
-function pages({}: Props) {
+function pages() {
   const router = useRouter();
   const {
     register,
@@ -16,49 +15,26 @@ function pages({}: Props) {
     formState: { errors, isSubmitting },
     getValues,
     setError,
-  } = useForm<TSignUpSchema>({
-    resolver: zodResolver(signUpSchema),
+  } = useForm<TLoginSchema>({
+    resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit: SubmitHandler<TSignUpSchema> = async (
-    data: TSignUpSchema
-  ) => {
-    const response = await fetch("api/user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: data.username,
-        email: data.email,
-        password: data.password,
-        confirmPassword: data.confirmPassword,
-      }),
+  const onSubmit: SubmitHandler<TLoginSchema> = async (data: TLoginSchema) => {
+    const signInData = await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirect: false,
     });
 
-    const responseData = await response.json();
+    console.log(signInData);
 
-    if (responseData.errors) {
-      const errors = responseData.errors;
-
-      if (errors.email) {
-        setError("email", {
-          type: "server",
-          message: errors.email,
-        });
-      } else if (errors.password) {
-        setError("password", {
-          type: "server",
-          message: errors.password,
-        });
-      } else if (errors.confirmPassword) {
-        setError("confirmPassword", {
-          type: "server",
-          message: errors.confirmPassword,
-        });
-      } else {
-        alert("Something went wrong!");
-      }
+    if (!signInData?.ok) {
+      setError("email", {
+        type: "server",
+        message: "Invalid email or password",
+      });
+    } else {
+      router.push("/");
     }
   };
   return (
@@ -68,14 +44,12 @@ function pages({}: Props) {
     >
       <form className="relative bg-white w-80 px-4 py-10 flex flex-col gap-y-2 rounded">
         <input
-          {...register("username")}
-          type="text"
-          placeholder="username"
+          {...register("email")}
+          type="email"
+          placeholder="email"
           className="px-4 py-2 rounded bg-slate-200"
         />
-        {errors.username && (
-          <p className="text-red-500">{errors.username.message}</p>
-        )}
+        {errors.email && <p className="text-red-500">{errors.email.message}</p>}
 
         <input
           {...register("password")}

@@ -31,10 +31,6 @@ function DeleteTodo({ data, index }: Props) {
         old.filter((item: dataProps, dataIndex) => dataIndex !== Number(index))
       );
     },
-
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-    },
   });
   return (
     <form

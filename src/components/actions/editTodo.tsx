@@ -37,10 +37,6 @@ function EditTodo({ data }: Props) {
         })
       );
     },
-
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-    },
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

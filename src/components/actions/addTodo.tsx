@@ -25,9 +25,7 @@ function AddTodo() {
     onError: (err, newTodo, context) => {
       queryClient.setQueryData(["posts"], context?.previousTodos);
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
-    },
+   
   });
 
   return (

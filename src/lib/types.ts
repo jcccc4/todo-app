@@ -13,8 +13,9 @@ export const signUpSchema = z
   });
 
 export const loginSchema = z.object({
-  username: z.string().min(3),
-  password: z.string().min(10, "Password must be at least 10 characters"),
+  email: z.string().min(1, "Email is required").email("Invalid email"),
+  password: z.string().min(1, "Password is required"),
 });
 
 export type TSignUpSchema = z.infer<typeof signUpSchema>;
+export type TLoginSchema = z.infer<typeof loginSchema>;
