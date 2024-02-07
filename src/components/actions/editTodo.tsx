@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   data: { id: number; content: string | null; authorId: number | null };
+  
 };
 type dataProps = {
   id: number;
@@ -47,7 +48,7 @@ function EditTodo({ data }: Props) {
     if (!firstRender) {
       formRef.current?.requestSubmit();
     }
-  }, [debouncedValue]);
+  }, [debouncedValue, firstRender]);
 
   useEffect(() => {
     setFirstRender(false);

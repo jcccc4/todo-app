@@ -7,7 +7,7 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 
-function pages() {
+function Page() {
   const router = useRouter();
   const {
     register,
@@ -34,7 +34,7 @@ function pages() {
         message: "Invalid email or password",
       });
     } else {
-      router.push("/");
+      router.replace("/");
     }
   };
   return (
@@ -73,4 +73,4 @@ function pages() {
   );
 }
 
-export default pages;
+export default Page;
