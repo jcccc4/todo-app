@@ -44,6 +44,7 @@ function Page() {
       <form className="relative bg-white w-80 px-4 py-10 flex flex-col gap-y-2 rounded">
         <input
           {...register("email")}
+          id='loginId'
           type="email"
           placeholder="email"
           className="px-4 py-2 rounded bg-slate-200"
@@ -52,6 +53,7 @@ function Page() {
 
         <input
           {...register("password")}
+          id='loginPassword'
           type="password"
           placeholder="password"
           className="px-4 py-2 rounded bg-slate-200"
