@@ -1,9 +1,10 @@
 'use client'
 
 import React from "react";
-import EditTodo from "./editTodo";
-import DeleteTodo from "./deleteTodo";
-import { getData } from "./todoActions";
+import EditTodo from "./_actions/EditTodo";
+import DeleteTodo from "./_actions/DeleteTodo";
+import { getData } from "@/data-access/todoActions";
+
 import { useQuery } from "@tanstack/react-query";
 
 type dataProps = {

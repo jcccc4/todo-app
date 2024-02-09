@@ -1,12 +1,12 @@
 import React from "react";
 
-import AuthButtons from "../buttons/authButtons";
+import AuthButtons from "@/components/buttons/authButtons";
 
 type Props = {
   listName: string;
 };
 
-const ListHeader = (props: Props) => {
+const Header = (props: Props) => {
   return (
     <header className="h-20 px-10 flex items-center justify-between">
       <h1>{props.listName}</h1>
@@ -15,4 +15,4 @@ const ListHeader = (props: Props) => {
   );
 };
 
-export default ListHeader;
+export default Header;

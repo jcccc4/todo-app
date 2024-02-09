@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 
-export async function create(formData: FormData) {
+export async function createAction(formData: FormData) {
   const input = formData.get("input") as string;
   const session = await getServerSession();
   const userEmail = session?.user?.email;
@@ -24,7 +24,7 @@ export async function create(formData: FormData) {
   revalidatePath("/");
 }
 
-export async function editTodo(formData: FormData) {
+export async function editAction(formData: FormData) {
   const id = formData.get("editId") as string;
   const content = formData.get("editValue") as string;
 
@@ -38,7 +38,7 @@ export async function editTodo(formData: FormData) {
   });
 }
 
-export async function deleteTodo(formData: FormData) {
+export async function deleteAction(formData: FormData) {
   const id = formData.get("inputId") as string;
 
   await prisma.post.delete({

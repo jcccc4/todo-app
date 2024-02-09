@@ -13,7 +13,6 @@ function Page() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    getValues,
     setError,
   } = useForm<TLoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -34,7 +33,7 @@ function Page() {
         message: "Invalid email or password",
       });
     } else {
-      router.replace("/");
+      router.replace("/dashboard");
     }
   };
   return (

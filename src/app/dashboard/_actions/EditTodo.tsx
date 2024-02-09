@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { editTodo } from "./todoActions";
+import { editAction } from"@/data-access/todoActions";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -23,7 +23,7 @@ function EditTodo({ data }: Props) {
   const queryClient = useQueryClient();
 
   const editTodoMutation = useMutation({
-    mutationFn: editTodo,
+    mutationFn: editAction,
     onMutate: async (newTodo) => {
       await queryClient.cancelQueries({ queryKey: ["posts"] });
       const id = newTodo.get("editId") as string;

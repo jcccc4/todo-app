@@ -1,11 +1,11 @@
 import { IconX } from "@tabler/icons-react";
 import {
-  UseMutationResult,
+
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
 import React from "react";
-import { deleteTodo } from "./todoActions";
+import { deleteAction } from "@/data-access/todoActions";
 
 type Props = {
   data: { id: number; content: string | null; authorId: number | null };
@@ -21,7 +21,7 @@ type dataProps = {
 function DeleteTodo({ data, index }: Props) {
   const queryClient = useQueryClient();
   const deleteTodoMutation = useMutation({
-    mutationFn: deleteTodo,
+    mutationFn: deleteAction,
     onMutate: async (newTodo) => {
       await queryClient.cancelQueries({ queryKey: ["posts"] });
 
