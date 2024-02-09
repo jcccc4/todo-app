@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import Button from "@/components/buttons/Button";
+import Button from "./Button";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 function AuthButtons() {
