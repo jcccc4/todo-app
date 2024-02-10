@@ -1,6 +1,6 @@
 import React from "react";
 
-import AuthButtons from "@/components/buttons/authButtons";
+import AuthButtons from "@/components/buttons/AuthButtons";
 
 type Props = {
   listName: string;

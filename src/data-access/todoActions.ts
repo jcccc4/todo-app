@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 
@@ -21,7 +20,6 @@ export async function createAction(formData: FormData) {
       content: input,
     },
   });
-  revalidatePath("/");
 }
 
 export async function editAction(formData: FormData) {
@@ -46,8 +44,6 @@ export async function deleteAction(formData: FormData) {
       id: Number(id),
     },
   });
-
-  revalidatePath("/");
 }
 
 export async function getData() {

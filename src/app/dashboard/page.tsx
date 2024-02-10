@@ -1,12 +1,16 @@
-import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
-import React from 'react'
-import AddTodo from './_actions/AddTodo';
-import TodoList from './TodoList';
-import { getServerSession } from 'next-auth';
-import { getData } from '../../data-access/todoActions';
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
+import React from "react";
+import AddTodo from "./_actions/AddTodo";
+import TodoList from "./TodoList";
+import { getServerSession } from "next-auth";
+import { getData } from "../../data-access/todoActions";
 
 async function Page() {
-    const session = await getServerSession();
+  const session = await getServerSession();
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
@@ -15,12 +19,13 @@ async function Page() {
   });
 
   if (session) {
-  return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
+    return (
+      <HydrationBoundary state={dehydrate(queryClient)}>
         <AddTodo />
         <TodoList />
       </HydrationBoundary>
-  )}
+    );
+  }
 }
 
 export default Page;
