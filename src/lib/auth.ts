@@ -1,12 +1,12 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
 import { compare } from "bcrypt";
 import { NextAuthOptions } from "next-auth";
 
-const authOptions: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
+  secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/login",
   },
@@ -28,11 +28,11 @@ const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
-      
+
         const user = await prisma.user.findUnique({
           where: { email: credentials?.email },
         });
-      
+
         if (!user) {
           return null; // return null if the user is not authorized
         }
@@ -55,6 +55,24 @@ const authOptions: NextAuthOptions = {
     //   clientSecret: process.env.GOOGLE_SECRET ?? "",
     // }),
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        return {
+          ...token,
+          username: user.username,
+        };
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          username: token.username,
+        },
+      };
+    },
+  },
 };
-
-export default NextAuth(authOptions);

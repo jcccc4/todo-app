@@ -1,13 +1,8 @@
-"use client";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-
-export default function Home() {
-
-  const { data: session } = useSession();
-  
-
+export default async function Home() {
+  const session = await getServerSession(authOptions);
 
   console.log(session);
   return <main>Welcome this is your Home page.</main>;

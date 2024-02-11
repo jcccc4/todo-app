@@ -5,7 +5,7 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default function Providers({ children }) {
-  const [queryClient] = useState(
+ const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
@@ -13,6 +13,7 @@ export default function Providers({ children }) {
             // With SSR, we usually want to set some default staleTime
             // above 0 to avoid refetching immediately on the client
             staleTime: 60 * 1000,
+            refetchOnWindowFocus: false,
           },
         },
       }),

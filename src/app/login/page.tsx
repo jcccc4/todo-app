@@ -25,8 +25,6 @@ function Page() {
       redirect: false,
     });
 
-    console.log(signInData);
-
     if (!signInData?.ok) {
       setError("email", {
         type: "server",

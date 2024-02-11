@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import SessionProvider from "@/app/_providers/sessionProvider";
+import SessionProvider from "@/app/sessionProvider";
 import "./globals.css";
 import { getServerSession } from "next-auth";
 import Header from "@/components/semantics/Header";
-import QueryProviders from "@/app/_providers/QueryProviders";
+import QueryProviders from "@/app/QueryProviders";
+import { Suspense } from "react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -22,12 +23,14 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <SessionProvider session={session}>
-          <QueryProviders>
+        <QueryProviders>
+        <Suspense fallback={<div>Loading...</div>}>
+          <SessionProvider session={session}>
             <Header listName="Task List" />
             {children}
-          </QueryProviders>
-        </SessionProvider>
+          </SessionProvider>
+          </Suspense>
+        </QueryProviders>
       </body>
     </html>
   );

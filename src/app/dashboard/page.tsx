@@ -8,9 +8,10 @@ import AddTodo from "./_actions/AddTodo";
 import TodoList from "./TodoList";
 import { getServerSession } from "next-auth";
 import { getData } from "../../data-access/todoActions";
+import { authOptions } from "@/lib/auth";
 
 async function Page() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
