@@ -1,11 +1,10 @@
-
 "use client";
 
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default function Providers({ children }) {
- const [queryClient] = useState(
+  const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
@@ -16,8 +15,8 @@ export default function Providers({ children }) {
             refetchOnWindowFocus: false,
           },
         },
-      }),
-  )
+      })
+  );
 
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>

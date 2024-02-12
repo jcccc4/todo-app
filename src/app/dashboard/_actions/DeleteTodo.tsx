@@ -1,9 +1,5 @@
 import { IconX } from "@tabler/icons-react";
-import {
-
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { deleteAction } from "@/data-access/todoActions";
 

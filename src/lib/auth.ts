@@ -46,10 +46,6 @@ export const authOptions: NextAuthOptions = {
         return { id: user.id, username: user.username, email: user.email }; // return the user object or null if the user is not authorized
       },
     }),
-    // GithubProvider({
-    //   clientId: process.env.GITHUB_ID ?? "",
-    //   clientSecret: process.env.GITHUB_SECRET ?? "",
-    // }),
     // GoogleProvider({
     //   clientId: process.env.GOOGLE_ID ?? "",
     //   clientSecret: process.env.GOOGLE_SECRET ?? "",

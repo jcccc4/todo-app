@@ -24,11 +24,11 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <QueryProviders>
-        <Suspense fallback={<div>Loading...</div>}>
-          <SessionProvider session={session}>
-            <Header listName="Task List" />
-            {children}
-          </SessionProvider>
+          <Suspense fallback={<div>Loading...</div>}>
+            <SessionProvider session={session}>
+              <Header listName="Task List" />
+              {children}
+            </SessionProvider>
           </Suspense>
         </QueryProviders>
       </body>

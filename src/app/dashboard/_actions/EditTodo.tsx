@@ -1,12 +1,11 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { editAction } from"@/data-access/todoActions";
+import { editAction } from "@/data-access/todoActions";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   data: { id: number; content: string | null; authorId: number | null };
-  
 };
 type dataProps = {
   id: number;
