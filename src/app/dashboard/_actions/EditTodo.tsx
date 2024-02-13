@@ -5,12 +5,12 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 type Props = {
-  data: { id: number; content: string | null; authorId: number | null };
+  data: { id: number; content: string | null; email: string | null };
 };
 type dataProps = {
   id: number;
   content: string | null;
-  authorId: number | null;
+  email: string | null;
 };
 
 function EditTodo({ data }: Props) {

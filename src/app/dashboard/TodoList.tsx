@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 type dataProps = {
   id: number;
   content: string | null;
-  authorId: number | null;
+  email: string | null;
 };
 
 function TodoList() {

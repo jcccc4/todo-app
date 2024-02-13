@@ -4,14 +4,14 @@ import React from "react";
 import { deleteAction } from "@/data-access/todoActions";
 
 type Props = {
-  data: { id: number; content: string | null; authorId: number | null };
+  data: { id: number; content: string | null; email: string | null };
   index: number;
 };
 
 type dataProps = {
   id: number;
   content: string | null;
-  authorId: number | null;
+  email: string | null;
 };
 
 function DeleteTodo({ data, index }: Props) {
