@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { hash } from "bcrypt";
 import { signUpSchema } from "@/lib/types";
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -56,5 +57,12 @@ export async function POST(req: Request) {
         ? { errors: zodErrors }
         : { success: true }
     );
-  } catch (err) {}
+  } catch (err) {
+    // Handle the error and return an appropriate response
+    console.error("Error during signup:", err);
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 }
+    );
+  }
 }

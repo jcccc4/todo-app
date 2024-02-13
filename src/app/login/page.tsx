@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
+import GoogleButtons from "@/components/buttons/GoogleButtons";
 
 function Page() {
   const router = useRouter();
@@ -67,6 +68,7 @@ function Page() {
         >
           Login
         </button>
+        <GoogleButtons>Google</GoogleButtons>
       </form>
     </div>
   );

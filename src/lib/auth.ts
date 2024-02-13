@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
 import { compare } from "bcrypt";
 import { NextAuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -36,20 +37,23 @@ export const authOptions: NextAuthOptions = {
         if (!user) {
           return null; // return null if the user is not authorized
         }
-        const passwordMatch = await compare(
-          credentials.password,
-          user.password
-        );
-        if (!passwordMatch) {
-          return null; // return null if the user is not authorized
+        if (user.password) {
+          const passwordMatch = await compare(
+            credentials.password,
+            user.password
+          );
+          if (!passwordMatch) {
+            return null; // return null if the user is not authorized
+          }
         }
-        return { id: user.id, username: user.username, email: user.email }; // return the user object or null if the user is not authorized
+
+        return { id: `${user.id}`, username: user.username, email: user.email }; // return the user object or null if the user is not authorized
       },
     }),
-    // GoogleProvider({
-    //   clientId: process.env.GOOGLE_ID ?? "",
-    //   clientSecret: process.env.GOOGLE_SECRET ?? "",
-    // }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID ?? "",
+      clientSecret: process.env.GOOGLE_SECRET ?? "",
+    }),
   ],
   callbacks: {
     async jwt({ token, user }) {
