@@ -29,7 +29,7 @@ function Page() {
     if (!signInData?.ok) {
       setError("email", {
         type: "server",
-        message: "Invalid email or password",
+        message: "Invalid email",
       });
     } else {
       router.replace("/dashboard");
