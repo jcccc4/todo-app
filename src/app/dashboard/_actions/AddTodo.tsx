@@ -1,12 +1,7 @@
 "use client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createAction } from "@/data-access/todoActions";
-
-type dataProps = {
-  id: number;
-  content: string | null;
-  authorId: number | null;
-};
+import { dataProps } from "@/lib/types";
 
 function AddTodo() {
   const queryClient = useQueryClient();
@@ -24,9 +19,6 @@ function AddTodo() {
     },
     onError: (err, newTodo, context) => {
       queryClient.setQueryData(["posts"], context?.previousTodos);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
 

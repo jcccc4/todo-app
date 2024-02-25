@@ -3,15 +3,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { editAction } from "@/data-access/todoActions";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { dataProps, Props } from "@/lib/types";
+import { dataProps } from "@/lib/types";
 
-function EditTodo({ data }: Props) {
+type Props = {
+  data: dataProps;
+};
+
+function TodoStatus({ data }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [firstRender, setFirstRender] = useState(true);
-  const [value, setValue] = useState(data.content || "");
-  const debouncedValue = useDebounce(value);
-
   const queryClient = useQueryClient();
+  const [isChecked, setIsChecked] = useState(data.isCompleted);
 
   const editTodoMutation = useMutation({
     mutationFn: editAction,
@@ -31,20 +32,6 @@ function EditTodo({ data }: Props) {
     },
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
-
-  useEffect(() => {
-    if (!firstRender) {
-      formRef.current?.requestSubmit();
-    }
-  }, [debouncedValue, firstRender]);
-
-  useEffect(() => {
-    setFirstRender(false);
-  }, []);
-
   return (
     <form
       action={(formData) => editTodoMutation.mutate(formData)}
@@ -52,14 +39,9 @@ function EditTodo({ data }: Props) {
       className="w-6 h-6"
     >
       <input type="hidden" name="editId" value={data.id} />
-      <input
-        name="editValue"
-        defaultValue={value}
-        className="focus:outline-none "
-        onChange={handleChange}
-      />
+      <input name="editValue" type="checkbox" />
     </form>
   );
 }
 
-export default EditTodo;
+export default TodoStatus;

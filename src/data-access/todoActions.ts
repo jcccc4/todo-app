@@ -3,6 +3,21 @@
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 
+export async function getData() {
+  const session = await getServerSession();
+  const userEmail = session?.user?.email;
+  const data = await prisma.post.findMany({
+    where: {
+      email: userEmail,
+    },
+    orderBy: {
+      id: "asc",
+    },
+  });
+
+  return data;
+}
+
 export async function createAction(formData: FormData) {
   const input = formData.get("input") as string;
   const session = await getServerSession();
@@ -18,6 +33,7 @@ export async function createAction(formData: FormData) {
     data: {
       email: userEmail,
       content: input,
+      isCompleted: false,
     },
   });
 }
@@ -46,17 +62,20 @@ export async function deleteAction(formData: FormData) {
   });
 }
 
-export async function getData() {
-  const session = await getServerSession();
-  const userEmail = session?.user?.email;
-  const data = await prisma.post.findMany({
+export async function todoStatus(formData: FormData) {
+  const id = formData.get("editId") as string;
+  const todo = await prisma.post.findUnique({
     where: {
-      email: userEmail,
-    },
-    orderBy: {
-      id: "asc",
+      id: Number(id),
     },
   });
-
-  return data;
+  
+  await prisma.post.update({
+    where: {
+      id: Number(id),
+    },
+    data: {
+      isCompleted: !todo?.isCompleted,
+    },
+  });
 }
